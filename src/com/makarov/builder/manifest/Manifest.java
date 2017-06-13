@@ -68,6 +68,7 @@ public class Manifest {
         Manifest manifest = new Manifest("manifest");
         manifest.parameters.put("Agent-Class", agentClass.getName());
         manifest.parameters.put("Can-Retransform-Classes", true);
+        manifest.parameters.put("Can-Redefine-Classes", true);
 
         return manifest;
     }

@@ -73,6 +73,13 @@ public class AgentJarBuilder {
                 this.manifest = Manifest.createDefaultAgentManifest(agentClass);
             }
 
+            String jarPath = System.getProperty("user.dir") + File.separator + jarName;
+
+            File jarFile = new File(jarPath);
+            if (jarFile.exists()) {
+                while (!jarFile.delete());
+            }
+
             String manifestPath = manifest.create();
             String command = String.format(commandPattern, BuildConstants.JAR, BuildConstants.JAR_COMMAND, jarName, manifestPath, toClassCommand());
             try {
@@ -80,8 +87,6 @@ public class AgentJarBuilder {
             } catch (IOException exception) {
                 throw new RuntimeException(exception);
             }
-
-            String jarPath = System.getProperty("user.dir") + File.separator + jarName;
 
             if (isDeleteManifest) {
                 FileDeleter.deleteAfterCreateFile(manifestPath, new Action<String>() {
@@ -95,6 +100,7 @@ public class AgentJarBuilder {
 
             File file = new File(jarPath);
             while (!file.exists());
+
             return jarPath;
         }
 
