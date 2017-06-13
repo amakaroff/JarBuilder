@@ -54,7 +54,6 @@ public class AgentJarBuilder {
         @Override
         public Builder addAgentClass(Class<?> clazz) {
             this.agentClass = clazz;
-            addClass(this.agentClass);
             return this;
         }
 
@@ -94,12 +93,15 @@ public class AgentJarBuilder {
                 }, jarPath);
             }
 
+            File file = new File(jarPath);
+            while (!file.isFile());
             return jarPath;
         }
 
         private String toClassCommand() {
             StringBuilder builder = new StringBuilder();
 
+            addClass(this.agentClass);
             for (Class<?> clazz : classes) {
                 ProtectionDomain domain = clazz.getProtectionDomain();
                 if (domain != null) {
