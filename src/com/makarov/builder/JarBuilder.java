@@ -11,6 +11,8 @@ public class JarBuilder {
 
     private final String jarCommand = "-cvfm";
 
+    private String tempDir;
+
     private final String cdCommand = "/cd /d";
 
     private final String jarName = "Agent.jar";
@@ -19,6 +21,7 @@ public class JarBuilder {
         if (protectionDomainPath == null && classes != null && classes.length > 0) {
             protectionDomainPath = classes[0].getProtectionDomain().getCodeSource().getLocation().getPath().substring(1).replace("/", "\\");
         }
+        tempDir = "-C " + protectionDomainPath;
         build(classes, createManifest());
     }
 
@@ -27,9 +30,9 @@ public class JarBuilder {
 
         System.out.println(jar + " " + commandBuilder(classes, manifest));
         System.out.println(cdCommand + " "  + protectionDomainPath);
+        System.out.println(jar + " " + commandBuilder(classes, manifest));
         try {
-            //runtime.exec(cdCommand + " " + protectionDomainPath);
-            runtime.exec("cmd " + cdCommand + " " + protectionDomainPath + " && " + jar + " " + commandBuilder(classes, manifest));
+            runtime.exec( jar + " " + commandBuilder(classes, manifest));
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println(1);
@@ -47,7 +50,7 @@ public class JarBuilder {
                 .append(manifest.getAbsolutePath()).append(" ");
 
         for (Class<?> clazz : classes) {
-            builder.append(getNormalClassFileName(clazz)).append(" ");
+            builder.append(tempDir).append(" ").append(getNormalClassFileName(clazz)).append(" ");
         }
         builder.delete(builder.length() - 1, builder.length());
 
@@ -55,7 +58,7 @@ public class JarBuilder {
     }
 
     private File createManifest() {
-        return new File("D:\\Java\\jarBuiler\\src\\com\\makarov\\builder\\manifest.mf");
+        return new File("C:\\Users\\alma0317\\IdeaProjects\\JarBuilder\\src\\com\\makarov\\builder\\manifest.mf");
     }
 
     private String getNormalClassFileName(Class<?> clazz) {
