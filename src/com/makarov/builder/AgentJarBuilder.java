@@ -76,7 +76,6 @@ public class AgentJarBuilder {
 
             String manifestPath = manifest.create();
             String command = String.format(commandPattern, BuildConstants.JAR, BuildConstants.JAR_COMMAND, jarName, manifestPath, toClassCommand());
-            System.out.println(command);
             try {
                 Runtime.getRuntime().exec(command);
             } catch (IOException exception) {
