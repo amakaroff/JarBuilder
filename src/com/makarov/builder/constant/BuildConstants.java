@@ -2,9 +2,6 @@ package com.makarov.builder.constant;
 
 import java.io.File;
 
-/**
- * Created by alma0317 on 13.06.2017.
- */
 public class BuildConstants {
 
     public static final String JAR_COMMAND = "-cfvm";
@@ -21,4 +18,6 @@ public class BuildConstants {
     public static final String MANIFEST_SUFFIX = ".mf";
 
     public static final String CLASS_FILE_SUFFIX = ".class";
+
+    public static final String JAR_C_COMMAND = "-C";
 }

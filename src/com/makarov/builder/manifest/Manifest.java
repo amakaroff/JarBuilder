@@ -1,6 +1,5 @@
 package com.makarov.builder.manifest;
 
-import com.makarov.builder.action.FileDeleter;
 import com.makarov.builder.constant.BuildConstants;
 
 import java.io.File;
@@ -31,6 +30,12 @@ public class Manifest {
 
     public String create() {
         File file = new File(fileName);
+
+        boolean isDelete = false;
+        if (file.isFile()) {
+            isDelete = file.delete();
+        }
+
         try {
             boolean isFileCreate = file.createNewFile();
 

@@ -4,18 +4,13 @@ import java.io.File;
 
 public class FileDeleter {
 
-    public static void deleteAfterCreateFile(String pathDeletableFile, String pathCreatableFile) {
+    public static <T> void deleteAfterCreateFile(String pathDeletableFile, Action<T> action, T data) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                boolean isDeleted = false;
-                while (!isDeleted) {
-                    File creatableFile = new File(pathCreatableFile);
-                    if (creatableFile.isFile()) {
-                        File deletableFile = new File(pathDeletableFile);
-                        isDeleted = deletableFile.delete();
-                    }
-                }
+                while (!action.isActionComplete(data));
+                File file = new File(pathDeletableFile);
+                while (!file.delete());
             }
         });
 

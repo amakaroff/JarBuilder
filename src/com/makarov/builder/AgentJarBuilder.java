@@ -1,5 +1,6 @@
 package com.makarov.builder;
 
+import com.makarov.builder.action.Action;
 import com.makarov.builder.action.FileDeleter;
 import com.makarov.builder.constant.BuildConstants;
 import com.makarov.builder.manifest.Manifest;
@@ -59,6 +60,11 @@ public class AgentJarBuilder {
 
         @Override
         public String build() {
+            return build(false);
+        }
+
+        @Override
+        public String build(boolean isDeleteManifest) {
             if (agentClass == null) {
                 //TODO: try find agentClass from classes
                 throw new RuntimeException("Agent class must be");
@@ -78,7 +84,16 @@ public class AgentJarBuilder {
             }
 
             String jarPath = System.getProperty("user.dir") + File.separator + jarName;
-            FileDeleter.deleteAfterCreateFile(manifestPath, jarPath);
+
+            if (isDeleteManifest) {
+                FileDeleter.deleteAfterCreateFile(manifestPath, new Action<String>() {
+                    @Override
+                    public boolean isActionComplete(String data) {
+                        File file = new File(data);
+                        return file.isFile();
+                    }
+                }, jarPath);
+            }
 
             return jarPath;
         }
@@ -92,7 +107,8 @@ public class AgentJarBuilder {
                     String classFileProtectionDomain = domain.getCodeSource().getLocation().getPath().substring(1).replace("/", File.separator);
                     String classFilePath = clazz.getName().replace(".", File.separator) + BuildConstants.CLASS_FILE_SUFFIX;
 
-                    builder.append("-C ").append(classFileProtectionDomain).append(" ")
+                    builder.append(BuildConstants.JAR_C_COMMAND).append(" ")
+                            .append(classFileProtectionDomain).append(" ")
                             .append(classFilePath).append(" ");
                 }
             }
