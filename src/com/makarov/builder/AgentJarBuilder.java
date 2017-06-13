@@ -94,7 +94,7 @@ public class AgentJarBuilder {
             }
 
             File file = new File(jarPath);
-            while (!file.isFile());
+            while (!file.exists());
             return jarPath;
         }
 
